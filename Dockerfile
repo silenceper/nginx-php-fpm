@@ -5,8 +5,9 @@ MAINTAINER ngineered <support@ngineered.co.uk>
 ENV php_conf /etc/php7/php.ini 
 ENV fpm_conf /etc/php7/php-fpm.d/www.conf
 
-RUN echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories && \
-    sed -i -e "s/v3.4/edge/" /etc/apk/repositories && \
+RUN echo http://nl.alpinelinux.org/alpine/edge/main > /etc/apk/repositories && \
+    echo http://nl.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories && \
+    echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories && \
     echo /etc/apk/respositories && \
     apk update && \
     apk add --no-cache bash \ 
@@ -42,6 +43,7 @@ RUN echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repo
     php7-dom \
     php7-zip \
     php7-session \
+    php7-redis \
     python \
     python-dev \
     py2-pip \
@@ -66,7 +68,7 @@ RUN echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repo
     pip install -U certbot && \
     mkdir -p /etc/letsencrypt/webrootauth && \
     apk del gcc musl-dev linux-headers libffi-dev augeas-dev python-dev && \
-    ln -s /usr/bin/php7 /usr/bin/php
+    ln -sf /usr/bin/php7 /usr/bin/php
 
 ADD conf/supervisord.conf /etc/supervisord.conf
 
@@ -82,7 +84,7 @@ rm -Rf /var/www/* && \
 mkdir /var/www/html/
 ADD conf/nginx-site.conf /etc/nginx/sites-available/default.conf
 ADD conf/nginx-site-ssl.conf /etc/nginx/sites-available/default-ssl.conf
-RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf
+RUN ln -sf /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf
 
 # tweak php-fpm config
 RUN sed -i \
@@ -107,7 +109,7 @@ RUN sed -i \
         -e "s/listen = 127.0.0.1:9000/listen = \/var\/run\/php-fpm.sock/g" \
         -e "s/^;clear_env = no$/clear_env = no/" \
         ${fpm_conf} && \
-    ln -s /etc/php7/php.ini /etc/php7/conf.d/php.ini && \
+    ln -sf /etc/php7/php.ini /etc/php7/conf.d/php.ini && \
     find /etc/php7/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
 
 
