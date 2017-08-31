@@ -44,6 +44,7 @@ RUN echo http://nl.alpinelinux.org/alpine/edge/main > /etc/apk/repositories && \
     php7-zip \
     php7-session \
     php7-redis \
+    php7-fileinfo \
     python \
     python-dev \
     py2-pip \
