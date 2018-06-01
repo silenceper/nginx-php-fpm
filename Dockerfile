@@ -1,4 +1,4 @@
-FROM nginx:mainline-alpine
+FROM silenceper/docker-nginx:mainline-alpine
 
 MAINTAINER ngineered <support@ngineered.co.uk>
 
