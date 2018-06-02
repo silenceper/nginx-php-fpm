@@ -4,7 +4,7 @@ MAINTAINER ngineered <support@ngineered.co.uk>
 
 ENV php_conf /etc/php5/php.ini
 ENV fpm_conf /etc/php5/php-fpm.conf
-ENV composer_hash 61069fe8c6436a4468d0371454cf38a812e451a14ab1691543f25a9627b97ff96d8753d92a00654c21e2212a5ae1ff36
+ENV composer_hash 544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061 
 
 #RUN echo http://nl.alpinelinux.org/alpine/edge/main > /etc/apk/repositories && \
 #    echo http://nl.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories && \
