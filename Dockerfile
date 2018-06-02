@@ -1,4 +1,4 @@
-FROM silenceper/docker-nginx:mainline-alpine
+FROM silenceper/docker-nginx:mainline-1.13.3
 
 MAINTAINER ngineered <support@ngineered.co.uk>
 
@@ -6,11 +6,11 @@ ENV php_conf /etc/php5/php.ini
 ENV fpm_conf /etc/php5/php-fpm.conf
 ENV composer_hash 61069fe8c6436a4468d0371454cf38a812e451a14ab1691543f25a9627b97ff96d8753d92a00654c21e2212a5ae1ff36
 
-RUN echo http://nl.alpinelinux.org/alpine/edge/main > /etc/apk/repositories && \
-    echo http://nl.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories && \
-    echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories && \
-    echo /etc/apk/respositories && \
-    apk update && \
+#RUN echo http://nl.alpinelinux.org/alpine/edge/main > /etc/apk/repositories && \
+#    echo http://nl.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories && \
+#    echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories && \
+#    echo /etc/apk/respositories && \
+RUN apk update && \
     apk add --no-cache bash \
     openssh-client \
     wget \
@@ -41,7 +41,6 @@ RUN echo http://nl.alpinelinux.org/alpine/edge/main > /etc/apk/repositories && \
     php5-soap \
     php5-dom \
     php5-zip \
-    php5-redis@testing \
     python \
     python-dev \
     py-pip \
@@ -65,6 +64,10 @@ RUN echo http://nl.alpinelinux.org/alpine/edge/main > /etc/apk/repositories && \
     pip install -U certbot && \
     mkdir -p /etc/letsencrypt/webrootauth && \
     apk del gcc musl-dev linux-headers libffi-dev augeas-dev python-dev
+	# Install php5-redis package that's missing from the testing alpine branch
+RUN curl --insecure -L -o php5-redis-2.2.8-r0.apk "https://github.com/IFSight/docker-php/raw/master/alpine/3.5/php56-sec/packages/php5-redis-2.2.8-r0.apk" && \
+    apk add --allow-untrusted php5-redis-2.2.8-r0.apk && \
+    rm -f php5-redis-2.2.8-r0.apk
 
 
 ADD conf/supervisord.conf /etc/supervisord.conf
