@@ -4,7 +4,7 @@ MAINTAINER ngineered <support@ngineered.co.uk>
 
 ENV php_conf /etc/php5/php.ini
 ENV fpm_conf /etc/php5/php-fpm.conf
-ENV composer_hash 544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061 
+ENV composer_hash 544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061
 
 #RUN echo http://nl.alpinelinux.org/alpine/edge/main > /etc/apk/repositories && \
 #    echo http://nl.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories && \
@@ -111,6 +111,10 @@ RUN sed -i \
         ${fpm_conf} && \
     ln -s /etc/php5/php.ini /etc/php5/conf.d/php.ini && \
     find /etc/php5/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
+
+# add prometheus exporter
+RUN wget -c https://github.com/silenceper/php-fpm-exporter/releases/download/untagged-b3339cde4e3bfd174c37/php-fpm-exporter.linux.amd64 -O ./usr/bin/php-fpm-exporter
+RUN chmod 755 /usr/bin/php-fpm-exporter
 
 # Add Scripts
 ADD scripts/start.sh /start.sh

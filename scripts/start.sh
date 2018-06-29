@@ -104,5 +104,8 @@ if [[ "$RUN_SCRIPTS" == "1" ]] ; then
   fi
 fi
 
+# Start php-fpm-exporter
+nohup /usr/bin/php-fpm-exporter --addr=127.0.0.1:8081 --fastcgi=unix:/var/run/php-fpm.sock &
+
 # Start supervisord and services
 /usr/bin/supervisord -n -c /etc/supervisord.conf
