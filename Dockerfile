@@ -2,7 +2,7 @@ FROM silenceper/docker-nginx:mainline-alpine
 
 MAINTAINER ngineered <support@ngineered.co.uk>
 
-ENV php_conf /etc/php7/php.ini 
+ENV php_conf /etc/php7/php.ini
 ENV fpm_conf /etc/php7/php-fpm.d/www.conf
 
 RUN echo http://nl.alpinelinux.org/alpine/edge/main > /etc/apk/repositories && \
@@ -10,7 +10,7 @@ RUN echo http://nl.alpinelinux.org/alpine/edge/main > /etc/apk/repositories && \
     echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories && \
     echo /etc/apk/respositories && \
     apk update && \
-    apk add --no-cache bash \ 
+    apk add --no-cache bash \
     openssh-client \
     wget \
     nginx \
@@ -113,6 +113,9 @@ RUN sed -i \
     ln -sf /etc/php7/php.ini /etc/php7/conf.d/php.ini && \
     find /etc/php7/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
 
+# add prometheus exporter
+RUN wget -c https://github.com/silenceper/php-fpm-exporter/releases/download/untagged-b3339cde4e3bfd174c37/php-fpm-exporter.linux.amd64 -O ./usr/bin/php-fpm-exporter
+RUN chmod 755 /usr/bin/php-fpm-exporter
 
 # Add Scripts
 ADD scripts/start.sh /start.sh
@@ -129,6 +132,7 @@ ADD errors/ /var/www/errors
 VOLUME /var/www/html
 
 #EXPOSE 443 80
+
 
 #CMD ["/usr/bin/supervisord", "-n", "-c",  "/etc/supervisord.conf"]
 CMD ["/start.sh"]
